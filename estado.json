@@ -1,5 +1,5 @@
 {
-  "ejecutado": "2026-10-04T14:56:08+00:00",
+  "ejecutado": "2026-10-04T15:01:50+00:00",
   "ofertas_publicadas": 10,
   "conservado_sin_cambios": false,
   "temporada": null,
@@ -35,6 +35,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 1,
+          "tolerante": false,
           "detalle": null
         },
         {
@@ -42,6 +43,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 1,
+          "tolerante": false,
           "detalle": null
         },
         {
@@ -49,6 +51,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 0,
+          "tolerante": false,
           "detalle": "la tienda respondió (10 resultados) pero ninguno es Steelcase Gesture"
         },
         {
@@ -56,6 +59,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 3,
+          "tolerante": false,
           "detalle": null
         },
         {
@@ -63,6 +67,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 1,
+          "tolerante": false,
           "detalle": null
         },
         {
@@ -70,6 +75,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 1,
+          "tolerante": false,
           "detalle": null
         },
         {
@@ -77,6 +83,7 @@
           "ok": true,
           "omitida": false,
           "ofertas": 0,
+          "tolerante": false,
           "detalle": "el buscador respondió pero no hay Steelcase Gesture en el catálogo"
         },
         {
@@ -84,6 +91,7 @@
           "ok": false,
           "omitida": true,
           "ofertas": 0,
+          "tolerante": false,
           "detalle": "faltan EBAY_CLIENT_ID / EBAY_CLIENT_SECRET (regístrate en developer.ebay.com)"
         }
       ]
@@ -92,20 +100,20 @@
       "id": "tygr",
       "nombre": "Beyerdynamic TYGR 300 R",
       "corto": "TYGR 300 R",
-      "umbral_aviso": 130.0,
+      "umbral_aviso": 140.0,
       "solo_ue": true,
       "conservado": false,
       "a_mano": [
         {
-          "nombre": "Wallapop",
-          "url": "https://es.wallapop.com/app/search?keywords=tygr%20300"
+          "nombre": "Madrid Hifi",
+          "url": "https://www.madridhifi.com/buscar?controller=search&s=tygr+300+r"
         },
         {
           "nombre": "PcComponentes",
           "url": "https://www.pccomponentes.com/buscar/?query=tygr%20300%20r"
         },
         {
-          "nombre": "Amazon.es",
+          "nombre": "Amazon.es (buscador)",
           "url": "https://www.amazon.es/s?k=beyerdynamic+tygr+300+r"
         }
       ],
@@ -115,6 +123,15 @@
           "ok": true,
           "omitida": false,
           "ofertas": 1,
+          "tolerante": false,
+          "detalle": null
+        },
+        {
+          "nombre": "Amazon.es",
+          "ok": true,
+          "omitida": false,
+          "ofertas": 1,
+          "tolerante": true,
           "detalle": null
         },
         {
@@ -122,21 +139,8 @@
           "ok": true,
           "omitida": false,
           "ofertas": 1,
+          "tolerante": false,
           "detalle": null
-        },
-        {
-          "nombre": "Beyerdynamic B-Stock (UE)",
-          "ok": true,
-          "omitida": false,
-          "ofertas": 1,
-          "detalle": null
-        },
-        {
-          "nombre": "eBay (2ª mano)",
-          "ok": false,
-          "omitida": true,
-          "ofertas": 0,
-          "detalle": "faltan EBAY_CLIENT_ID / EBAY_CLIENT_SECRET (regístrate en developer.ebay.com)"
         }
       ]
     }
