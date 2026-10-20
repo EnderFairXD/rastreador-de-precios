@@ -1097,6 +1097,33 @@ def cargar_historico() -> dict:
     return datos if isinstance(datos, dict) else {}
 
 
+def depurar_historico(producto: dict, dias: list[dict]) -> list[dict]:
+    """Quita del histórico las tiendas que ya no se rastrean y recalcula el
+    mínimo de cada día.
+
+    Hace falta porque el histórico guarda lo que se midió entonces: cuando se
+    retiró el B-Stock de Beyerdynamic, su 109 € se quedó clavado como mínimo
+    de los auriculares pese a ser un reacondicionado, que ya no cuenta."""
+    vigentes = {f["nombre"] for f in producto["fuentes"]}
+    for dia in dias:
+        tiendas = dia.get("tiendas") or {}
+        sobran = [t for t in tiendas if t not in vigentes]
+        if not sobran:
+            continue
+        for t in sobran:
+            tiendas.pop(t)
+        anterior = dia.get("mejor")
+        if tiendas:
+            tienda, valor = min(tiendas.items(), key=lambda kv: kv[1])
+            dia["mejor"], dia["tienda"] = valor, tienda
+        else:
+            dia["mejor"], dia["tienda"] = None, None
+        dia["tiendas"] = tiendas
+        log(f"   histórico corregido {dia['fecha']}: {anterior} -> {dia['mejor']} "
+            f"(ya no se rastrea: {', '.join(sobran)})")
+    return dias
+
+
 def actualizar_historico(articulo: str, publicadas: list[dict]) -> list[dict]:
     """Un registro por día con lo más barato que podías comprar de verdad:
     en stock y con entrega en España. Si el robot pasa varias veces en el
@@ -1124,6 +1151,9 @@ def actualizar_historico(articulo: str, publicadas: list[dict]) -> list[dict]:
 
     todo = cargar_historico()
     dias = todo.get(articulo) or []
+    producto = next((p for p in PRODUCTOS if p["id"] == articulo), None)
+    if producto:
+        dias = depurar_historico(producto, dias)
     previo = next((d for d in dias if d.get("fecha") == hoy), None)
     if previo is None:
         dias.append(registro)
