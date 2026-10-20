@@ -647,6 +647,10 @@ img { max-width: 100%; }
   }
 
   var config = Object.assign({}, POR_DEFECTO, leer(CLAVE_CONF, {}));
+  if (config.repo === "ofertas-gesture") {  // el repositorio se renombró
+    config.repo = POR_DEFECTO.repo;
+    escribir(CLAVE_CONF, config);
+  }
 
   var eur = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
   var sinDecimales = new Intl.NumberFormat("es-ES", {
