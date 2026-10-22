@@ -13,7 +13,7 @@
     "Disponible": true,
     "Entrega": "importa",
     "Estado": "ok",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "gesture",
@@ -29,7 +29,7 @@
     "Disponible": true,
     "Entrega": "es",
     "Estado": "ok",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "gesture",
@@ -45,7 +45,7 @@
     "Disponible": false,
     "Entrega": "importa",
     "Estado": "sin stock",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "gesture",
@@ -53,7 +53,7 @@
     "Producto": "Refurbished Steelcase Gesture Task chair",
     "Precio": 480.0,
     "Moneda": "GBP",
-    "PrecioEUR": 571.25,
+    "PrecioEUR": 572.64,
     "Envio": null,
     "EnvioEUR": null,
     "TotalEUR": null,
@@ -61,7 +61,7 @@
     "Disponible": true,
     "Entrega": "no",
     "Estado": "ok",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "gesture",
@@ -69,7 +69,7 @@
     "Producto": "Steelcase Gesture Task chair",
     "Precio": 420.0,
     "Moneda": "GBP",
-    "PrecioEUR": 499.84,
+    "PrecioEUR": 501.06,
     "Envio": null,
     "EnvioEUR": null,
     "TotalEUR": null,
@@ -77,7 +77,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "gesture",
@@ -85,7 +85,7 @@
     "Producto": "Steelcase Gesture Task chair – delivery within London M25",
     "Precio": 475.0,
     "Moneda": "GBP",
-    "PrecioEUR": 565.3,
+    "PrecioEUR": 566.68,
     "Envio": null,
     "EnvioEUR": null,
     "TotalEUR": null,
@@ -93,7 +93,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "gesture",
@@ -101,7 +101,7 @@
     "Producto": "Steelcase Gesture Chair",
     "Precio": 534.0,
     "Moneda": "GBP",
-    "PrecioEUR": 635.51,
+    "PrecioEUR": 637.06,
     "Envio": null,
     "EnvioEUR": null,
     "TotalEUR": null,
@@ -109,7 +109,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-10-21T11:00:01+00:00"
+    "Última actualización": "2026-10-22T10:59:08+00:00"
   },
   {
     "Articulo": "tygr",
@@ -125,7 +125,7 @@
     "Disponible": true,
     "Entrega": "ue",
     "Estado": "ok",
-    "Última actualización": "2026-10-21T11:00:11+00:00"
+    "Última actualización": "2026-10-22T10:59:19+00:00"
   },
   {
     "Articulo": "tygr",
@@ -141,6 +141,6 @@
     "Disponible": true,
     "Entrega": "ue",
     "Estado": "ok",
-    "Última actualización": "2026-10-21T11:00:11+00:00"
+    "Última actualización": "2026-10-22T10:59:19+00:00"
   }
 ]
