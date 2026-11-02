@@ -3,17 +3,17 @@
     "Articulo": "gesture",
     "Tienda": "Office Logix Shop (reacond. EE. UU.)",
     "Producto": "Steelcase Gesture Chair",
-    "Precio": 563.95,
+    "Precio": 561.95,
     "Moneda": "EUR",
-    "PrecioEUR": 563.95,
-    "Envio": 318.95,
-    "EnvioEUR": 318.95,
-    "TotalEUR": 1068.31,
+    "PrecioEUR": 561.95,
+    "Envio": 316.95,
+    "EnvioEUR": 316.95,
+    "TotalEUR": 1063.47,
     "Enlace": "https://www.officelogixshop.com/products/steelcase-gesture-platinum-frame-desk-chair",
     "Disponible": true,
     "Entrega": "importa",
     "Estado": "ok",
-    "Última actualización": "2026-11-02T04:34:47+00:00"
+    "Última actualización": "2026-11-02T14:30:40+00:00"
   },
   {
     "Articulo": "gesture",
@@ -29,15 +29,15 @@
     "Disponible": true,
     "Entrega": "es",
     "Estado": "ok",
-    "Última actualización": "2026-11-02T04:34:47+00:00"
+    "Última actualización": "2026-11-02T14:30:40+00:00"
   },
   {
     "Articulo": "gesture",
     "Tienda": "The Office Crowd (reacond. ES)",
     "Producto": "Steelcase Silla de oficina ergonómica Gesture - Tela gris - Reacondicionada",
-    "Precio": 799.95,
+    "Precio": 798.95,
     "Moneda": "EUR",
-    "PrecioEUR": 799.95,
+    "PrecioEUR": 798.95,
     "Envio": null,
     "EnvioEUR": null,
     "TotalEUR": null,
@@ -45,7 +45,7 @@
     "Disponible": false,
     "Entrega": "importa",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-02T04:34:47+00:00"
+    "Última actualización": "2026-11-02T14:30:40+00:00"
   },
   {
     "Articulo": "gesture",
@@ -61,7 +61,7 @@
     "Disponible": true,
     "Entrega": "no",
     "Estado": "ok",
-    "Última actualización": "2026-11-02T04:34:47+00:00"
+    "Última actualización": "2026-11-02T14:30:40+00:00"
   },
   {
     "Articulo": "gesture",
@@ -77,7 +77,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-02T04:34:47+00:00"
+    "Última actualización": "2026-11-02T14:30:40+00:00"
   },
   {
     "Articulo": "gesture",
@@ -93,7 +93,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-02T04:34:47+00:00"
+    "Última actualización": "2026-11-02T14:30:40+00:00"
   },
   {
     "Articulo": "gesture",
@@ -108,7 +108,7 @@
     "Enlace": "https://barkhamofficefurniture.co.uk/steelcase-gesture-chair-43625-p.asp",
     "Disponible": false,
     "Entrega": "no",
-    "Estado": "sin stock",
+    "Estado": "obsoleto",
     "Última actualización": "2026-11-02T04:34:47+00:00"
   },
   {
@@ -125,7 +125,7 @@
     "Disponible": true,
     "Entrega": "ue",
     "Estado": "ok",
-    "Última actualización": "2026-11-02T04:34:56+00:00"
+    "Última actualización": "2026-11-02T14:30:47+00:00"
   },
   {
     "Articulo": "tygr",
@@ -141,6 +141,6 @@
     "Disponible": true,
     "Entrega": "ue",
     "Estado": "ok",
-    "Última actualización": "2026-11-02T04:34:56+00:00"
+    "Última actualización": "2026-11-02T14:30:47+00:00"
   }
 ]
