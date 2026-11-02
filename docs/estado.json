@@ -1,5 +1,5 @@
 {
-  "ejecutado": "2026-11-02T04:34:56+00:00",
+  "ejecutado": "2026-11-02T14:30:47+00:00",
   "ofertas_publicadas": 9,
   "conservado_sin_cambios": false,
   "temporada": null,
@@ -63,11 +63,11 @@
         },
         {
           "nombre": "Barkham Office Furniture (UK)",
-          "ok": true,
+          "ok": false,
           "omitida": false,
-          "ofertas": 1,
+          "ofertas": 0,
           "tolerante": false,
-          "detalle": null
+          "detalle": "RuntimeError: no se pudo descargar https://barkhamofficefurniture.co.uk/steelcase-gesture-chair-43625-p.asp: HTTP 403"
         },
         {
           "nombre": "Office Logix Shop (reacond. EE. UU.)",
