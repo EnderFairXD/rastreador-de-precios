@@ -13,7 +13,7 @@
     "Disponible": true,
     "Entrega": "importa",
     "Estado": "ok",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "gesture",
@@ -29,7 +29,7 @@
     "Disponible": true,
     "Entrega": "es",
     "Estado": "ok",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "gesture",
@@ -45,7 +45,7 @@
     "Disponible": false,
     "Entrega": "importa",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "gesture",
@@ -61,7 +61,7 @@
     "Disponible": true,
     "Entrega": "no",
     "Estado": "ok",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "gesture",
@@ -77,7 +77,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "gesture",
@@ -93,7 +93,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "gesture",
@@ -109,23 +109,7 @@
     "Disponible": false,
     "Entrega": "no",
     "Estado": "sin stock",
-    "Última actualización": "2026-11-03T11:38:37+00:00"
-  },
-  {
-    "Articulo": "tygr",
-    "Tienda": "Thomann (DE)",
-    "Producto": "beyerdynamic TYGR 300 R – Thomann España",
-    "Precio": 158.0,
-    "Moneda": "EUR",
-    "PrecioEUR": 158.0,
-    "Envio": null,
-    "EnvioEUR": null,
-    "TotalEUR": null,
-    "Enlace": "https://www.thomann.es/beyerdynamic_tygr_300_r.htm",
-    "Disponible": true,
-    "Entrega": "ue",
-    "Estado": "ok",
-    "Última actualización": "2026-11-03T11:38:48+00:00"
+    "Última actualización": "2026-11-03T13:27:49+00:00"
   },
   {
     "Articulo": "tygr",
@@ -141,6 +125,38 @@
     "Disponible": true,
     "Entrega": "ue",
     "Estado": "ok",
+    "Última actualización": "2026-11-03T13:28:06+00:00"
+  },
+  {
+    "Articulo": "tygr",
+    "Tienda": "Amazon.es",
+    "Producto": "beyerdynamic TYGR 300 R Auriculares Gaming, Abiertos, 32 ohmios, Over-Ear",
+    "Precio": 158.0,
+    "Moneda": "EUR",
+    "PrecioEUR": 158.0,
+    "Envio": null,
+    "EnvioEUR": null,
+    "TotalEUR": null,
+    "Enlace": "https://www.amazon.es/dp/B07XYG56HS",
+    "Disponible": false,
+    "Entrega": "es",
+    "Estado": "sin stock",
+    "Última actualización": "2026-11-03T13:28:06+00:00"
+  },
+  {
+    "Articulo": "tygr",
+    "Tienda": "Thomann (DE)",
+    "Producto": "beyerdynamic TYGR 300 R – Thomann España",
+    "Precio": 158.0,
+    "Moneda": "EUR",
+    "PrecioEUR": 158.0,
+    "Envio": null,
+    "EnvioEUR": null,
+    "TotalEUR": null,
+    "Enlace": "https://www.thomann.es/beyerdynamic_tygr_300_r.htm",
+    "Disponible": true,
+    "Entrega": "ue",
+    "Estado": "obsoleto",
     "Última actualización": "2026-11-03T11:38:48+00:00"
   }
 ]

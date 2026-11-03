@@ -1,6 +1,6 @@
 {
-  "ejecutado": "2026-11-03T11:38:48+00:00",
-  "ofertas_publicadas": 9,
+  "ejecutado": "2026-11-03T13:28:06+00:00",
+  "ofertas_publicadas": 10,
   "conservado_sin_cambios": false,
   "temporada": null,
   "productos": [
@@ -118,19 +118,19 @@
       "fuentes": [
         {
           "nombre": "Thomann (DE)",
-          "ok": true,
-          "omitida": false,
-          "ofertas": 1,
-          "tolerante": false,
-          "detalle": null
-        },
-        {
-          "nombre": "Amazon.es",
           "ok": false,
           "omitida": false,
           "ofertas": 0,
+          "tolerante": false,
+          "detalle": "RuntimeError: no se pudo descargar https://www.thomann.es/beyerdynamic_tygr_300_r.htm: HTTP 429 (reto anti-bot)"
+        },
+        {
+          "nombre": "Amazon.es",
+          "ok": true,
+          "omitida": false,
+          "ofertas": 1,
           "tolerante": true,
-          "detalle": "RuntimeError: Amazon ha devuelto su página de verificación"
+          "detalle": null
         },
         {
           "nombre": "Beyerdynamic oficial (UE)",
