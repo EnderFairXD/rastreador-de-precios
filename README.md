@@ -21,8 +21,9 @@ Corre solo en GitHub Actions y publica los datos en una web instalable (PWA).
   escaparate.
 - **Nunca publica vacío**: si una tienda falla conserva su último precio marcado como obsoleto; si
   fallan todas, el workflow se pone en rojo.
-- **Avisos** por Telegram y por incidencia de GitHub, cuando baja del precio objetivo o cae mucho
-  por debajo de su precio habitual.
+- **Avisos** por Telegram, cuando baja del precio objetivo o cae mucho por debajo de su precio
+  habitual. Las incidencias de GitHub siguen disponibles como canal (`AVISO_CANALES`), pero están
+  desactivadas porque en un repositorio público cualquiera las lee.
 - **Panel**: `app.py` (Streamlit) y la web de `docs/`, publicada en GitHub Pages con un selector de
   producto, la gráfica de precio y los enlaces a cada tienda.
 
@@ -31,7 +32,7 @@ El diagnóstico y las decisiones de diseño están en [`LEEME-SOLUCION.md`](LEEM
 ## Configuración
 
 Los precios objetivo se guardan como secretos del repositorio (`UMBRAL_GESTURE` y `UMBRAL_TYGR`),
-así que no aparecen en el código ni en la web. Sin secreto, ese producto solo avisa por caída de
+así que no aparecen en el código, en la web ni en los avisos públicos. Sin secreto, ese producto solo avisa por caída de
 precio. El resto de secretos (Telegram, eBay) están descritos en el workflow.
 
 ## Ejecutar en local

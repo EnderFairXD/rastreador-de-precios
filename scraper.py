@@ -59,9 +59,11 @@ DIAS_HISTORICO = 365
 AVISO_SIMULADO = os.getenv("AVISO_SIMULADO", "") == "1"
 # Con esto a 1 se manda un aviso de prueba, para comprobar que Telegram llega.
 AVISO_PRUEBA = os.getenv("AVISO_PRUEBA", "") == "1"
-# Por dónde avisar. Quita "incidencia" si no quieres que abra incidencias.
+# Por dónde avisar: "telegram" y/o "incidencia". La incidencia es pública si el
+# repositorio lo es, y el aviso lleva el precio objetivo, así que por defecto
+# solo se usa Telegram.
 AVISO_CANALES = [
-    c.strip() for c in os.getenv("AVISO_CANALES", "telegram,incidencia").split(",")
+    c.strip() for c in os.getenv("AVISO_CANALES", "telegram").split(",")
     if c.strip()
 ]
 

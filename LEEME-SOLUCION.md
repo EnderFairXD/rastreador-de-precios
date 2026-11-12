@@ -359,10 +359,12 @@ IVA de importación incluidos). No contra el precio de escaparate.
 
 ## Canales
 
-- **Incidencia en GitHub** — funciona desde ya, sin configurar nada. El robot
-  abre una incidencia en el repositorio y GitHub te la manda por correo y por
-  su app móvil. Usa el `GITHUB_TOKEN` que el propio workflow ya tiene.
-- **Telegram** — opcional, dos minutos de preparación:
+- **Incidencia en GitHub** — desactivada. El robot puede abrir una incidencia
+  en el repositorio (GitHub la manda por correo y por su app móvil), pero en un
+  repositorio público cualquiera puede leerla, y el aviso dice el precio
+  objetivo. Solo conviene activarla (`AVISO_CANALES: 'telegram,incidencia'` y
+  el permiso `issues: write` en el workflow) si el repositorio es privado.
+- **Telegram** — el canal que se usa. Dos minutos de preparación:
   1. En Telegram, habla con **@BotFather** y manda `/newbot`. Te da un token.
   2. Escríbele algo a tu bot recién creado.
   3. Abre `https://api.telegram.org/bot<TU_TOKEN>/getUpdates` y copia el
