@@ -368,6 +368,15 @@
         "Office Logix Shop (reacond. EE. UU.)": 1068.31,
         "Steelcase Oficial (ES)": 1169.0
       }
+    },
+    {
+      "fecha": "2026-11-12",
+      "mejor": 1076.78,
+      "tienda": "Office Logix Shop (reacond. EE. UU.)",
+      "tiendas": {
+        "Office Logix Shop (reacond. EE. UU.)": 1076.78,
+        "Steelcase Oficial (ES)": 1169.0
+      }
     }
   ],
   "tygr": [
@@ -715,6 +724,15 @@
     },
     {
       "fecha": "2026-11-11",
+      "mejor": 158.0,
+      "tienda": "Thomann (DE)",
+      "tiendas": {
+        "Thomann (DE)": 158.0,
+        "Beyerdynamic oficial (UE)": 159.0
+      }
+    },
+    {
+      "fecha": "2026-11-12",
       "mejor": 158.0,
       "tienda": "Thomann (DE)",
       "tiendas": {
