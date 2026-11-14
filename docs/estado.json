@@ -1,5 +1,5 @@
 {
-  "ejecutado": "2026-11-14T12:51:03+00:00",
+  "ejecutado": "2026-11-14T17:41:19+00:00",
   "ofertas_publicadas": 10,
   "conservado_sin_cambios": false,
   "temporada": null,
@@ -126,11 +126,11 @@
         },
         {
           "nombre": "Amazon.es",
-          "ok": true,
+          "ok": false,
           "omitida": false,
-          "ofertas": 1,
+          "ofertas": 0,
           "tolerante": true,
-          "detalle": null
+          "detalle": "RuntimeError: Amazon ha devuelto su página de verificación"
         },
         {
           "nombre": "Beyerdynamic oficial (UE)",
