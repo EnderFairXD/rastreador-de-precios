@@ -25,6 +25,7 @@ Variables de entorno (todas opcionales):
 
 from __future__ import annotations
 
+import html
 import json
 import os
 import random
@@ -217,6 +218,35 @@ def limpiar(texto: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", texto or "")).strip()
 
 
+def parsear_precio(texto) -> float | None:
+    """"1.059,84", "1059.84", "1.059" y "1059" -> 1059.84 / 1059.0.
+
+    Con punto y coma a la vez, el último de los dos es el decimal. Con solo uno,
+    es separador de miles si le siguen exactamente tres cifras (ningún precio
+    tiene tres decimales) y decimal en el resto de casos."""
+    if texto is None:
+        return None
+    s = re.sub(r"[^\d.,]", "", str(texto))
+    if not s:
+        return None
+    if "," in s and "." in s:
+        if s.rfind(",") > s.rfind("."):
+            s = s.replace(".", "").replace(",", ".")
+        else:
+            s = s.replace(",", "")
+    elif "," in s:
+        partes = s.split(",")
+        s = "".join(partes) if len(partes) > 2 or len(partes[1]) == 3 else partes[0] + "." + partes[1]
+    elif "." in s:
+        partes = s.split(".")
+        if len(partes) > 2 or len(partes[1]) == 3:
+            s = "".join(partes)
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
 def interesa(titulo: str, producto: dict) -> bool:
     """¿Este título es el producto que buscamos, y no un accesorio suyo?"""
     t = titulo.lower()
@@ -261,7 +291,7 @@ class Cliente:
         ScraperAPI o PROXY_URL configurados, repite la petición por ahí."""
         ultimo_error: Exception | None = None
         for intento in range(1, REINTENTOS + 1):
-            por_proxy = usar_proxy or (intento > 1 and bool(self.clave_scraperapi))
+            por_proxy = usar_proxy or (intento > 1 and bool(self.clave_scraperapi or self.proxy))
             destino = url
             proxies = None
             if por_proxy and self.clave_scraperapi:
@@ -388,40 +418,39 @@ def precio_desde_jsonld(html: str) -> tuple[str | None, float | None, str, bool]
             # Las especificaciones de Shopify anidan ofertas en "offers".
             if bruto is None and isinstance(of.get("offers"), list):
                 for sub in of["offers"]:
-                    if isinstance(sub, dict) and sub.get("price") is not None:
+                    if not isinstance(sub, dict):
+                        continue
+                    valor = parsear_precio(sub.get("price"))
+                    if valor is not None:  # una oferta ilegible no tumba las demás
                         candidatos.append(
                             (
-                                float(sub["price"]),
+                                valor,
                                 sub.get("priceCurrency", "EUR"),
                                 "outofstock" not in str(sub.get("availability", "")).lower(),
                             )
                         )
                 continue
-            if bruto is None:
+            valor = parsear_precio(bruto)
+            if valor is None:
                 continue
-            try:
-                candidatos.append(
-                    (
-                        float(str(bruto).replace(",", ".")),
-                        of.get("priceCurrency", "EUR"),
-                        "outofstock" not in str(of.get("availability", "")).lower(),
-                    )
+            candidatos.append(
+                (
+                    valor,
+                    of.get("priceCurrency", "EUR"),
+                    "outofstock" not in str(of.get("availability", "")).lower(),
                 )
-            except ValueError:
-                continue
+            )
         if candidatos:
-            precio, moneda, disponible = min(candidatos, key=lambda c: c[0])
+            # Lo más barato que de verdad se puede comprar: primero lo que hay en
+            # stock, y entre lo agotado, lo más barato.
+            precio, moneda, disponible = min(candidatos, key=lambda c: (not c[2], c[0]))
             return nodo.get("name"), precio, moneda, disponible
 
     # Microdatos de schema.org: muchas tiendas grandes (Thomann, por ejemplo)
     # no publican JSON-LD pero sí marcan el precio con itemprop.
     micro = re.search(r'itemprop="price"[^>]*content="([^"]+)"', html)
     if micro:
-        try:
-            valor = float(micro.group(1).replace(".", "").replace(",", ".")
-                          if "," in micro.group(1) else micro.group(1))
-        except ValueError:
-            valor = None
+        valor = parsear_precio(micro.group(1))
         if valor is not None:
             divisa = re.search(r'itemprop="priceCurrency"[^>]*content="([^"]+)"', html)
             dispo = re.search(r'itemprop="availability"[^>]*(?:href|content)="([^"]+)"', html)
@@ -441,12 +470,10 @@ def precio_desde_jsonld(html: str) -> tuple[str | None, float | None, str, bool]
     sopa = BeautifulSoup(html, "html.parser")
     meta = sopa.find("meta", property=re.compile(r"(product:price|og:price):amount"))
     if meta and meta.get("content"):
-        texto = meta["content"].replace(".", "").replace(",", ".")
-        try:
+        valor = parsear_precio(meta["content"])
+        if valor is not None:
             div = sopa.find("meta", property=re.compile(r"price:currency"))
-            return None, float(texto), (div or {}).get("content", "EUR"), True
-        except ValueError:
-            pass
+            return None, valor, (div or {}).get("content", "EUR"), True
     return None, None, "EUR", True
 
 
@@ -680,7 +707,9 @@ def woocommerce_tienda(
             crudo = precios.get("price")
             if crudo in (None, ""):
                 continue
-            escala = 10 ** int(precios.get("currency_minor_unit", 2) or 2)
+            # 0 es un valor legítimo (monedas sin decimales): solo se asume 2 si falta.
+            minor = precios.get("currency_minor_unit")
+            escala = 10 ** int(minor if minor not in (None, "") else 2)
             ofertas.append(
                 Oferta(
                     tienda=tienda,
@@ -798,12 +827,18 @@ def ebay_api(cli: Cliente, tienda: str, producto: dict, consulta: str | None = N
             valor = float(precio.get("value"))
         except (TypeError, ValueError):
             continue
-        envio = 0.0
+        # Desconocido salvo que el anuncio lo declare: sin tarifa no se puede
+        # calcular el precio puesto en casa, y asumir envío gratis infla las gangas.
+        envio = None
         for opcion in item.get("shippingOptions") or []:
-            coste = (opcion.get("shippingCost") or {}).get("value")
-            if coste:
-                envio = float(coste)
-                break
+            coste_envio = (opcion.get("shippingCost") or {}).get("value")
+            if coste_envio in (None, ""):
+                continue
+            try:
+                envio = float(coste_envio)
+            except (TypeError, ValueError):
+                continue
+            break
         pais = ((item.get("itemLocation") or {}).get("country") or "").upper()
         if pais == "ES":
             entrega = ENTREGA_ES
@@ -1061,6 +1096,18 @@ def fusionar(nuevas: list[dict], previas: list[dict], fallidas: set[str]) -> lis
     )
 
 
+def conservar(anteriores: list[dict]) -> list[dict]:
+    """Red de seguridad: si ninguna fuente responde se publica lo último
+    conocido, pero marcado como obsoleto. Así sigue viéndose en la web sin
+    contar como precio de hoy en el histórico ni disparar avisos."""
+    salida = []
+    for d in anteriores:
+        copia = dict(d)
+        copia["Estado"] = "obsoleto"
+        salida.append(copia)
+    return salida
+
+
 # --------------------------------------------------------------------------- #
 # Programa principal
 # --------------------------------------------------------------------------- #
@@ -1079,9 +1126,10 @@ def recortar(ofertas: list[Oferta]) -> list[Oferta]:
 
 
 def coste(oferta: dict) -> float | None:
-    """Lo que cuesta ponerla en casa; si no hay tarifa de envío, el precio a
-    secas. Misma regla que usa la app para ordenar."""
-    for campo in ("TotalEUR", "PrecioEUR", "Precio"):
+    """Lo que cuesta ponerla en casa, en euros; si no hay tarifa de envío, el
+    precio a secas. Sin tipo de cambio no hay cifra en euros y se devuelve None:
+    un precio en libras o dólares no se compara con un umbral en euros."""
+    for campo in ("TotalEUR", "PrecioEUR"):
         if isinstance(oferta.get(campo), (int, float)):
             return float(oferta[campo])
     return None
@@ -1259,60 +1307,87 @@ def mensaje_aviso(producto: dict, oferta: dict, valor: float,
     return titulo, cuerpo
 
 
-def enviar_telegram(cli: Cliente, titulo: str, cuerpo: str) -> bool:
+def formato_telegram(titulo: str, cuerpo: str) -> str:
+    """El aviso se redacta en Markdown (vale tal cual para una incidencia de
+    GitHub). Para Telegram se pasa a HTML: su Markdown clásico se rompe con los
+    guiones bajos de los enlaces (beyerdynamic_tygr_300_r.htm) y rechaza el
+    mensaje entero, con lo que el aviso nunca llega."""
+    def a_html(md: str) -> str:
+        texto = html.escape(md, quote=False)
+        texto = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", texto)
+        # Solo una línea entera entre guiones bajos es cursiva: así un enlace
+        # con guiones bajos se queda como está.
+        return re.sub(r"^_(.+)_$", r"<i>\1</i>", texto, flags=re.M)
+
+    return f"🔔 <b>{html.escape(titulo, quote=False)}</b>\n\n{a_html(cuerpo)}"
+
+
+# Cada canal devuelve True si avisó, None si no está configurado y, si el
+# servicio rechazó el aviso o falló la red, el motivo como texto.
+def enviar_telegram(cli: Cliente, titulo: str, cuerpo: str) -> bool | str | None:
     ficha = os.getenv("TELEGRAM_TOKEN", "").strip()
     chat = os.getenv("TELEGRAM_CHAT_ID", "").strip()
     if not (ficha and chat):
-        return False
-    r = cli.sesion.post(
-        f"https://api.telegram.org/bot{ficha}/sendMessage",
-        json={
-            "chat_id": chat,
-            "text": f"🔔 *{titulo}*\n\n{cuerpo}",
-            "parse_mode": "Markdown",
-            "disable_web_page_preview": False,
-        },
-        timeout=TIMEOUT,
-    )
+        return None
+    try:
+        r = cli.sesion.post(
+            f"https://api.telegram.org/bot{ficha}/sendMessage",
+            json={
+                "chat_id": chat,
+                "text": formato_telegram(titulo, cuerpo),
+                "parse_mode": "HTML",
+                "disable_web_page_preview": False,
+            },
+            timeout=TIMEOUT,
+        )
+    except requests.RequestException as exc:
+        return f"error de red ({exc.__class__.__name__})"
     if r.status_code >= 400:
-        log(f"   Telegram rechazó el aviso: HTTP {r.status_code} {r.text[:120]}")
-        return False
+        return f"HTTP {r.status_code} {r.text[:120]}"
     log("   aviso enviado por Telegram")
     return True
 
 
-def abrir_incidencia(cli: Cliente, titulo: str, cuerpo: str) -> bool:
+def abrir_incidencia(cli: Cliente, titulo: str, cuerpo: str) -> bool | str | None:
     """Abre una incidencia en el propio repositorio. GitHub la manda por correo
     y por su app móvil, así que no hace falta configurar nada más."""
     ficha = os.getenv("GITHUB_TOKEN", "").strip()
     repo = os.getenv("GITHUB_REPOSITORY", "").strip()
     if not (ficha and repo):
-        return False
-    r = cli.sesion.post(
-        f"https://api.github.com/repos/{repo}/issues",
-        headers={
-            "Authorization": f"Bearer {ficha}",
-            "Accept": "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
-        json={"title": f"🔔 {titulo}", "body": cuerpo},
-        timeout=TIMEOUT,
-    )
+        return None
+    try:
+        r = cli.sesion.post(
+            f"https://api.github.com/repos/{repo}/issues",
+            headers={
+                "Authorization": f"Bearer {ficha}",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+            json={"title": f"🔔 {titulo}", "body": cuerpo},
+            timeout=TIMEOUT,
+        )
+    except requests.RequestException as exc:
+        return f"error de red ({exc.__class__.__name__})"
     if r.status_code >= 400:
-        log(f"   GitHub rechazó la incidencia: HTTP {r.status_code} {r.text[:160]}")
-        return False
+        return f"HTTP {r.status_code} {r.text[:160]}"
     log(f"   aviso publicado como incidencia {r.json().get('html_url', '')}")
     return True
 
 
-def mandar(cli: Cliente, titulo: str, cuerpo: str) -> list[str]:
-    """Saca el aviso por los canales configurados y devuelve los que han ido."""
-    canales = []
-    if "telegram" in AVISO_CANALES and enviar_telegram(cli, titulo, cuerpo):
-        canales.append("telegram")
-    if "incidencia" in AVISO_CANALES and abrir_incidencia(cli, titulo, cuerpo):
-        canales.append("incidencia")
-    return canales
+def mandar(cli: Cliente, titulo: str, cuerpo: str) -> tuple[list[str], list[str]]:
+    """Saca el aviso por los canales configurados. Devuelve (los que han ido,
+    los que lo rechazaron con su motivo); un canal sin configurar no cuenta."""
+    canales, fallos = [], []
+    for nombre, enviar in (("telegram", enviar_telegram), ("incidencia", abrir_incidencia)):
+        if nombre not in AVISO_CANALES:
+            continue
+        resultado = enviar(cli, titulo, cuerpo)
+        if resultado is True:
+            canales.append(nombre)
+        elif resultado:
+            log(f"   {nombre} rechazó el aviso: {resultado}")
+            fallos.append(f"{nombre}: {resultado}")
+    return canales, fallos
 
 
 def probar_aviso(cli: Cliente, publicadas: list[dict]) -> None:
@@ -1336,11 +1411,13 @@ def probar_aviso(cli: Cliente, publicadas: list[dict]) -> None:
     cuerpo = ("Si estás leyendo esto, los avisos te llegan bien.\n\n"
               + "\n\n".join(lineas)
               + "\n\n_Mensaje de prueba lanzado a mano. No es una oferta._")
-    canales = mandar(cli, titulo, cuerpo)
+    canales, fallos = mandar(cli, titulo, cuerpo)
     if canales:
         log(f"aviso de prueba enviado por: {', '.join(canales)}")
+    elif fallos:
+        log("AVISO DE PRUEBA: ningún canal lo aceptó: " + "; ".join(fallos))
     else:
-        log("AVISO DE PRUEBA: no hay ningún canal configurado que funcione. "
+        log("AVISO DE PRUEBA: no hay ningún canal configurado. "
             "Revisa TELEGRAM_TOKEN y TELEGRAM_CHAT_ID en los secrets del repo.")
 
 
@@ -1424,9 +1501,12 @@ def avisar(cli: Cliente, producto: dict, publicadas: list[dict],
                 log(f"     | {linea}")
         return
 
-    canales = mandar(cli, titulo, cuerpo)
+    canales, fallos = mandar(cli, titulo, cuerpo)
     if not canales:
-        log("   hay motivo de aviso pero no hay ningún canal configurado")
+        if fallos:
+            log("   hay motivo de aviso pero ningún canal lo aceptó: " + "; ".join(fallos))
+        else:
+            log("   hay motivo de aviso pero no hay ningún canal configurado")
         return
 
     todo[producto["id"]] = {
@@ -1511,10 +1591,11 @@ def main() -> int:
         fallidas = {r.nombre for r in res_prod if not r.ok}
         cerrado = fusionar(nuevas, anteriores, fallidas)
 
-        # Red de seguridad por producto: nunca borrar lo bueno con una lista vacía.
+        # Red de seguridad por producto: nunca borrar lo bueno con una lista vacía,
+        # pero lo conservado se marca como obsoleto: no es el precio de hoy.
         if not cerrado and anteriores:
-            log(f"   ninguna fuente dio precio: se conservan {len(anteriores)} anteriores")
-            cerrado = anteriores
+            log(f"   ninguna fuente dio precio: se conservan {len(anteriores)} anteriores como obsoletas")
+            cerrado = conservar(anteriores)
             conservados.append(producto["id"])
 
         final.extend(cerrado)
