@@ -43,6 +43,17 @@ pip install -r requirements-scraper.txt    # rastreador
 streamlit run app.py
 ```
 
+## Tests
+
+```bash
+pip install -r requirements-scraper.txt -r requirements-dev.txt
+pytest
+```
+
+No tocan la red: cada caso construye el JSON-LD, los microdatos o la respuesta de API que
+devolvería una tienda, y comprueba cómo se leen los precios, cuándo se avisa y qué pasa cuando una
+fuente falla. Se ejecutan en GitHub en cada push y PR (workflow `tests.yml`).
+
 ## Licencia
 
 MIT © Javier Cortés Vidal
