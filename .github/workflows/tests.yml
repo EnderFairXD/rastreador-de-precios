@@ -1,0 +1,35 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      # Los commits del robot solo tocan datos: no hace falta volver a probar.
+      - 'datos.json'
+      - 'estado.json'
+      - 'historico.json'
+      - 'avisos.json'
+      - 'docs/*.json'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Tests del rastreador
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-scraper.txt -r requirements-dev.txt
+
+      - name: Tests (sin red)
+        run: pytest -q
